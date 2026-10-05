@@ -1,4 +1,3 @@
-/* Edit this file */
 const player = document.querySelector('.player');
 const video = player.querySelector('.viewer');
 const progress = player.querySelector('.progress');
@@ -24,7 +23,7 @@ function updateButton() {
 // Update progress bar
 function updateProgress() {
   const percent = (video.currentTime / video.duration) * 100;
-  progressBar.style.width = `${percent}%`;
+  progressBar.style.flexBasis = `${percent}%`;
 }
 
 // Change volume / playback speed
@@ -39,9 +38,7 @@ function skip() {
 
 // Click progress bar to seek
 function scrub(e) {
-  const scrubTime =
-    (e.offsetX / progress.offsetWidth) * video.duration;
-
+  const scrubTime = (e.offsetX / progress.offsetWidth) * video.duration;
   video.currentTime = scrubTime;
 }
 
