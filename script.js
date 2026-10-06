@@ -19,14 +19,10 @@ function togglePlay() {
 function updateButton() {
   toggle.textContent = video.paused ? '►' : '❚ ❚';
 }
-
-// Update progress bar
 function updateProgress() {
-  if (!video.duration) return;
-
   let percent = (video.currentTime / video.duration) * 100;
 
-  progressBar.style.width = percent + "%";
+  progressBar.style.flexBasis = `${percent}%`;
 }
 
 // Change volume / playback speed
