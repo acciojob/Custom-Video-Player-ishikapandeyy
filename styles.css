@@ -99,9 +99,9 @@ body {
 
 .progress__filled {
   background: #ffc600;
-  flex-basis: 50%;
+  width: 0%;
+  height: 100%;
 }
-
 /* unholy css to style input type="range" */
 
 input[type=range] {
