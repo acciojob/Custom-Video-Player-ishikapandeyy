@@ -22,6 +22,8 @@ function updateButton() {
 
 // Update progress bar
 function updateProgress() {
+  if (!video.duration || !isFinite(video.duration)) return;
+
   const percent = (video.currentTime / video.duration) * 100;
   progressBar.style.flexBasis = `${percent}%`;
 }
@@ -38,6 +40,8 @@ function skip() {
 
 // Click progress bar to seek
 function scrub(e) {
+  if (!video.duration || !isFinite(video.duration)) return;
+
   const scrubTime = (e.offsetX / progress.offsetWidth) * video.duration;
   video.currentTime = scrubTime;
 }
@@ -48,6 +52,7 @@ toggle.addEventListener('click', togglePlay);
 video.addEventListener('play', updateButton);
 video.addEventListener('pause', updateButton);
 video.addEventListener('timeupdate', updateProgress);
+video.addEventListener('loadedmetadata', updateProgress);
 
 ranges.forEach(range => {
   range.addEventListener('input', handleRange);
