@@ -25,12 +25,10 @@ function updateButton() {
 
 // Progress Bar
 function updateProgress() {
+  const percent = (video.currentTime / video.duration) * 100;
 
-    let percent = (video.currentTime / video.duration) * 100;
-
-    progressBar.style.flexBasis = `${percent}%`;
+  progressBar.style.flexBasis = `${percent}%`;
 }
-
 
 // Volume / Playback Speed
 function handleRange() {
