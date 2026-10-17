@@ -55,6 +55,12 @@ function scrub(e) {
     video.currentTime = scrubTime;
 }
 
+player.addEventListener('click', (e) => {
+  if (e.target.closest('.player__controls')) return; // ignore control clicks
+  if (video.paused) {
+    video.play().catch(err => console.error('Autoplay blocked:', err));
+  }
+});
 
 // Events
 
