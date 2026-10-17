@@ -41,11 +41,16 @@ function handleRange() {
 }
 
 
-// Skip
 function skip() {
-    video.currentTime += Number(this.dataset.skip);
-}
+    console.log("Skip button clicked:", this.dataset.skip);
 
+    const skipAmount = Number(this.dataset.skip);
+    console.log("Current time:", video.currentTime);
+
+    video.currentTime += skipAmount;
+
+    console.log("New time:", video.currentTime);
+}
 
 // Click progress bar
 function scrub(e) {
