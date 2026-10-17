@@ -22,9 +22,10 @@ function updateButton() {
 
 // Progress Bar
 function updateProgress() {
-  const percent = (video.currentTime / video.duration) * 100;
-progressBar.style.width = `${percent}%`;
-	console.log('percent =', percent);
+    if (!video.duration || !Number.isFinite(video.duration)) return;
+
+    const percent = (video.currentTime / video.duration) * 100;
+    progressBar.style.width = `${percent}%`;
 }
 
 // Volume / Playback Speed
@@ -66,7 +67,7 @@ player.addEventListener('click', (e) => {
 
 toggle.addEventListener("click", togglePlay);
 video.addEventListener('ended', updateButton)
-
+video.addEventListener("timeupdate", updateProgress);
 video.addEventListener("pause", updateButton);
 
 video.addEventListener('loadedmetadata', () => { updateProgress(); });
