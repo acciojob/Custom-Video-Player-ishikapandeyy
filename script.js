@@ -9,11 +9,8 @@ const ranges = player.querySelectorAll(".player__slider");
 
 // Play / Pause
 function togglePlay() {
-    if (video.paused) {
-        video.play();
-    } else {
-        video.pause();
-    }
+	 video.paused ? video.play() : video.pause();
+	 updateButton(); 
 }
 
 
@@ -26,8 +23,8 @@ function updateButton() {
 // Progress Bar
 function updateProgress() {
   const percent = (video.currentTime / video.duration) * 100;
-
-  progressBar.style.flexBasis = `${percent}%`;
+progressBar.style.width = `${percent}%`;
+	console.log('percent =', percent);
 }
 
 // Volume / Playback Speed
@@ -62,12 +59,12 @@ function scrub(e) {
 // Events
 
 toggle.addEventListener("click", togglePlay);
-
-video.addEventListener("play", updateButton);
+video.addEventListener('ended', updateButton)
 
 video.addEventListener("pause", updateButton);
 
-video.addEventListener("timeupdate", updateProgress);
+video.addEventListener('loadedmetadata', () => { updateProgress(); });
+
 
 ranges.forEach(function(range) {
     range.addEventListener("input", handleRange);
