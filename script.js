@@ -1,89 +1,69 @@
-const player = document.querySelector(".player");
-const video = player.querySelector(".viewer");
-const progress = player.querySelector(".progress");
-const progressBar = player.querySelector(".progress__filled");
-const toggle = player.querySelector(".toggle");
-const skipButtons = player.querySelectorAll("[data-skip]");
-const ranges = player.querySelectorAll(".player__slider");
+/* ==== SELECTORS ==== */
+const player      = document.querySelector('.player');
+const video       = player.querySelector('.viewer');
+const progress    = player.querySelector('.progress');
+const progressBar = player.querySelector('.progress__filled');
+const toggle      = player.querySelector('.toggle');
+const skipButtons = player.querySelectorAll('[data-skip]');
+const ranges      = player.querySelectorAll('.player__slider');
 
-
-// Play / Pause
-function togglePlay() {
-	 video.paused ? video.play() : video.pause();
-	 updateButton(); 
+/* ==== PLAY / PAUSE ==== */
+function togglePlay() { 
+	video.paused ? video.play() : video.pause(); 
+	updateButton(); 
 }
 
-
-// Change Play / Pause button
-function updateButton() {
-    toggle.textContent = video.paused ? "►" : "❚ ❚";
+function updateButton() { 
+	toggle.textContent = video.paused ? '►' : '❚❚'; 
 }
 
+toggle.addEventListener('click', togglePlay);
+video.addEventListener('pause', updateButton);
+video.addEventListener('play',  updateButton);
+video.addEventListener('ended', updateButton);
 
-// Progress Bar
+/* ==== PROGRESS BAR ==== */
 function updateProgress() {
-    if (!video.duration || !Number.isFinite(video.duration)) return;
-
-    const percent = (video.currentTime / video.duration) * 100;
-    progressBar.style.width = `${percent}%`;
+  if (!video.duration) return;
+  const percent = (video.currentTime / video.duration) * 100;
+  progressBar.style.width = `${percent}%`;
 }
 
-// Volume / Playback Speed
-function handleRange() {
+video.addEventListener('timeupdate', updateProgress);
+video.addEventListener('loadedmetadata', updateProgress);
 
-    if (this.name === "volume") {
-        video.volume = this.value;
-    }
-
-    if (this.name === "playbackRate") {
-        video.playbackRate = this.value;
-    }
-}
-
-
-function skip() {
-    console.log("Skip button clicked:", this.dataset.skip);
-
-    const skipAmount = Number(this.dataset.skip);
-    console.log("Current time:", video.currentTime);
-
-    video.currentTime += skipAmount;
-
-    console.log("New time:", video.currentTime);
-}
-
-// Click progress bar
+/* ==== SCRUB ==== */
 function scrub(e) {
-
-    let scrubTime =
-        (e.offsetX / progress.offsetWidth) * video.duration;
-
-    video.currentTime = scrubTime;
+  const scrubTime = (e.offsetX / progress.offsetWidth) * video.duration;
+  video.currentTime = scrubTime;
 }
+progress.addEventListener('click', scrub);
 
-player.addEventListener('click', (e) => {
-  if (e.target.closest('.player__controls')) return; // ignore control clicks
-  if (video.paused) {
-    video.play().catch(err => console.error('Autoplay blocked:', err));
+/* ==== SLIDERS (volume & speed) ==== */
+function handleRange() {
+  if (this.name === 'volume') video.volume = parseFloat(this.value);
+  else if (this.name === 'playbackRate') video.playbackRate = parseFloat(this.value);
+}
+ranges.forEach(r => r.addEventListener('input', handleRange));
+
+/* ==== SKIP BUTTONS ==== */
+function skip(e) {
+  const raw = e.currentTarget.dataset.skip;
+  const amount = parseFloat(raw);
+	
+  if (isNaN(amount)) { 
+	  console.warn('Invalid skip:', raw); return; 
   }
+	
+  let newTime = video.currentTime + amount;
+  newTime = Math.max(0, Math.min(newTime, video.duration));
+  video.currentTime = newTime;
+  console.log(`Skipped ${amount}s → ${video.currentTime}s`);
+}
+skipButtons.forEach(btn => btn.addEventListener('click', skip));
+
+/* ==== CLICK PLAYER TO PLAY (optional) ==== */
+player.addEventListener('click', e => {
+  if (e.target.closest('.player__controls')) return;
+  if (video.paused) video.play().catch(err => console.error('Autoplay blocked:', err));
 });
-
-// Events
-
-toggle.addEventListener("click", togglePlay);
-video.addEventListener('ended', updateButton)
-video.addEventListener("timeupdate", updateProgress);
-video.addEventListener("pause", updateButton);
-
-video.addEventListener('loadedmetadata', () => { updateProgress(); });
-
-
-ranges.forEach(function(range) {
-    range.addEventListener("input", handleRange);
-});
-
-skipButtons.forEach(function(button) {
-    button.addEventListener("click", skip);
-});
-
-progress.addEventListener("click", scrub);
