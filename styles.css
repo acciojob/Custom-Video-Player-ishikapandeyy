@@ -98,12 +98,11 @@ body {
 }
 
 .progress__filled {
-  background: #ffc600;
-  width: 0%;  
-  height: 100%;
+  width: 0%;          
+  background: #ff0;  
+  flex-basis: 0%;   
+  transition: width 0.1s linear;   
 }
-
-/* unholy css to style input type="range" */
 
 input[type=range] {
   -webkit-appearance: none;

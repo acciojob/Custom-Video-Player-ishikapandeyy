@@ -22,15 +22,17 @@ video.addEventListener('pause', updateButton);
 video.addEventListener('play',  updateButton);
 video.addEventListener('ended', updateButton);
 
-/* ==== PROGRESS BAR ==== */
 function updateProgress() {
-  if (!video.duration) return;
+  if (!video.duration) return;               // safety net
   const percent = (video.currentTime / video.duration) * 100;
   progressBar.style.width = `${percent}%`;
 }
 
 video.addEventListener('timeupdate', updateProgress);
-video.addEventListener('loadedmetadata', updateProgress);
+video.addEventListener('loadedmetadata', () => {
+  progressBar.style.width = '0%';
+  updateProgress();         
+});
 
 /* ==== SCRUB ==== */
 function scrub(e) {
